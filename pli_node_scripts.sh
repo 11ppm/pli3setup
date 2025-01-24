@@ -492,7 +492,7 @@ FUNC_NODE_DEPLOY(){
     GOP=$(grep 'GOPATH=' ~/.profile | cut -d '=' -f 2)
     if  [[ -z "$GOP" ]]; then
         echo "Error: GOPATH is not set in ~/.profile. Exiting..."
-        exit 1
+        FUNC_EXIT_ERROR
     else
         mkdir -p "$GOP/bin"
         sleep 2s
