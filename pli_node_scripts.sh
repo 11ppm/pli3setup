@@ -489,7 +489,14 @@ FUNC_NODE_DEPLOY(){
     sleep 2s
     source ~/.profile
 
-    sleep 2s
+    GOP=$(grep 'GOPATH=' ~/.profile | cut -d '=' -f 2)
+    if  [[ -z "$GOP" ]]; then
+        echo "Error: GOPATH is not set in ~/.profile. Exiting..."
+        exit 1
+    else
+        mkdir -p "$GOP/bin"
+        sleep 2s
+    fi
     
     MAX_RETRIES=3  # Maximum number of retries
     RETRY_DELAY=5  # Delay in seconds between retries
