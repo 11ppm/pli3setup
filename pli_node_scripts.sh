@@ -252,7 +252,7 @@ FUNC_NODE_DEPLOY(){
     echo -e "${GREEN}## Install: GOLANG Package(s) fetch & install... ${NC}"
     sleep 1s
 
-    GO_TAR="go1.20.6.linux-amd64.tar.gz"
+    GO_TAR="go1.21.7.linux-amd64.tar.gz"
     if [ ! -e $GO_TAR ]; then
         echo -e "${GREEN}INFO :: Downloading GO tar file...${NC}"
         wget https://dl.google.com/go/go1.21.7.linux-amd64.tar.gz
@@ -278,7 +278,7 @@ FUNC_NODE_DEPLOY(){
 
 
     # Extract GO install binaries 
-    sudo tar -xvf go1.20.6.linux-amd64.tar.gz
+    sudo tar -xvf go1.21.7.linux-amd64.tar.gz
 
 
 
