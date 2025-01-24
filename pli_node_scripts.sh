@@ -489,17 +489,34 @@ FUNC_NODE_DEPLOY(){
     sleep 2s
     source ~/.profile
 
-    ./install.bash
-    if [ $? != 0 ]; then
-      echo
-      echo  -e "${RED}## ERROR :: install.bash install encountered issues${NC}"
-      sleep 2s
-      FUNC_EXIT_ERROR
-    else
-      echo -e "${GREEN}INFO :: Successfully completed install.bash${NC}"
-      sleep 2s
-    fi
+    sleep 2s
     
+    MAX_RETRIES=3  # Maximum number of retries
+    RETRY_DELAY=5  # Delay in seconds between retries
+    RETRY_COUNT=0
+    SUCCESS=false
+
+    while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+        ./install.bash  # Invoke the second script
+
+        if [[ $? -eq 0 ]]; then
+            SUCCESS=true
+            break  # Exit the retry loop
+        else
+            ((RETRY_COUNT++))
+            echo  -e "${RED}## ERROR :: install.bash install encountered issues, trying again...${NC}"
+            sleep $RETRY_DELAY
+        fi
+    done
+
+    if [[ "$SUCCESS" == true ]]; then
+        echo -e "${GREEN}INFO :: Successfully completed install.bash${NC}"
+        sleep 2s
+    else
+        echo  -e "${RED}## ERROR :: install.bash install failed after $MAX_RETRIES attempts, exiting...${NC}"
+        FUNC_EXIT_ERROR
+    fi
+
     touch {$FILE_KEYSTORE,$FILE_API}
     chmod 666 {$FILE_KEYSTORE,$FILE_API}
 
