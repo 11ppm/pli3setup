@@ -32,7 +32,7 @@ As you are already expected to have this password securely stored in your passwo
 
 The following files/folders are not currently backed up as part of this process;
 
-  - pluginV2 folder
+  - pluginv3.0 folder
 
 
 ---

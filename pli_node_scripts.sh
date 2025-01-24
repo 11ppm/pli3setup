@@ -472,6 +472,23 @@ FUNC_NODE_DEPLOY(){
     #   sleep 2s
     # fi
 
+    # Update user profile with GO path values (moved because go is needed earlier)
+    
+    isInFile=$(cat ~/.profile | grep -c "GOROOT*")
+    if [ $isInFile -eq 0 ]; then
+        echo "export GOROOT=/usr/local/go" >> ~/.profile
+        echo "export GOPATH=$HOME/go" >> ~/.profile
+        echo "PATH=$GOPATH/bin:$GOROOT/bin:$PATH" >> ~/.profile
+        echo "SECURE_COOKIES=false" >> ~/.profile
+
+        echo -e "${GREEN}## Success: '.profile' updated with GO PATH values...${NC}"
+    else
+        echo -e "${GREEN}## Skipping: '.profile' contains GO PATH values...${NC}"
+    fi
+
+    sleep 2s
+    source ~/.profile
+
     ./install.bash
     if [ $? != 0 ]; then
       echo
@@ -521,21 +538,21 @@ extendedKeyUsage=serverAuth) -subj "/CN=localhost"
 
 
 
-    # Update user profile with GO path values
+    # # Update user profile with GO path values
     
-    isInFile=$(cat ~/.profile | grep -c "GOROOT*")
-    if [ $isInFile -eq 0 ]; then
-        echo "export GOROOT=/usr/local/go" >> ~/.profile
-        echo "export GOPATH=$HOME/go" >> ~/.profile
-        echo "PATH=$GOPATH/bin:$GOROOT/bin:$PATH" >> ~/.profile
-        echo "SECURE_COOKIES=false" >> ~/.profile
+    # isInFile=$(cat ~/.profile | grep -c "GOROOT*")
+    # if [ $isInFile -eq 0 ]; then
+    #     echo "export GOROOT=/usr/local/go" >> ~/.profile
+    #     echo "export GOPATH=$HOME/go" >> ~/.profile
+    #     echo "PATH=$GOPATH/bin:$GOROOT/bin:$PATH" >> ~/.profile
+    #     echo "SECURE_COOKIES=false" >> ~/.profile
 
-        echo -e "${GREEN}## Success: '.profile' updated with GO PATH values...${NC}"
-    else
-        echo -e "${GREEN}## Skipping: '.profile' contains GO PATH values...${NC}"
-    fi
+    #     echo -e "${GREEN}## Success: '.profile' updated with GO PATH values...${NC}"
+    # else
+    #     echo -e "${GREEN}## Skipping: '.profile' contains GO PATH values...${NC}"
+    # fi
 
-    source ~/.profile
+    # source ~/.profile
 
 
 
@@ -572,7 +589,7 @@ set API_EMAIL [lindex $argv 0]
 set API_PASS [lindex $argv 1]
 
 
-spawn ./NodeStartPM2.sh
+spawn ./node_start.sh
 
 expect "*Enter API Email?" { send -- "$API_EMAIL\r" }
 expect "*Enter API Password?" { send -- "$API_PASS\r" }
