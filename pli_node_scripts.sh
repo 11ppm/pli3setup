@@ -181,7 +181,7 @@ FUNC_NODE_DEPLOY(){
     echo -e "${GREEN}#########################################################################${NC}"
     echo -e "${GREEN}#########################################################################${NC}"
     echo -e "${GREEN}${NC}"
-    echo -e "${GREEN}             GoPlugin 2.0 ${BYELLOW}$_OPTION${GREEN} Validator Node - Install${NC}"
+    echo -e "${GREEN}             GoPlugin 3.0 ${BYELLOW}$_OPTION${GREEN} Validator/Operator Node - Install${NC}"
     echo -e "${GREEN}${NC}"
     echo -e "${GREEN}#########################################################################${NC}"
     echo -e "${GREEN}#########################################################################${NC}"
@@ -255,7 +255,7 @@ FUNC_NODE_DEPLOY(){
     GO_TAR="go1.20.6.linux-amd64.tar.gz"
     if [ ! -e $GO_TAR ]; then
         echo -e "${GREEN}INFO :: Downloading GO tar file...${NC}"
-        wget https://dl.google.com/go/go1.20.6.linux-amd64.tar.gz
+        wget https://dl.google.com/go/go1.21.7.linux-amd64.tar.gz
     fi
     
     echo -e "${GREEN}INFO :: GO tar file already exists...${NC}"
@@ -265,7 +265,7 @@ FUNC_NODE_DEPLOY(){
       echo
       echo  -e "${RED}## ERROR :: Go package download encoutered issues${NC}"
       echo  -e "${RED}## ERROR :: re-trying download once more...${NC}"
-      wget https://dl.google.com/go/go1.20.6.linux-amd64.tar.gz
+      wget https://dl.google.com/go/go1.21.7.linux-amd64.tar.gz
       sleep 1s
       if [ $? != 0 ]; then
         echo -e "${RED}## WGET of Go package failed... exiting${NC}"
@@ -328,13 +328,15 @@ FUNC_NODE_DEPLOY(){
 
     echo
     echo -e "${GREEN}#########################################################################${NC}"
-    echo -e "${GREEN}## Install: Clone GoPlugin V2 repo...${NC}"
+    echo -e "${GREEN}## Install: Clone GoPlugin v3 repo...${NC}"
      
-    git clone https://github.com/GoPlugin/pluginV2.git
+    git clone https://github.com/GoPlugin/pluginv3.0.git
 
-    echo -e "${GREEN}## Install: switch to GoPlugin V2 folder...${NC}"
+    echo -e "${GREEN}## Install: switch to GoPlugin v3 folder...${NC}"
     cd $PLI_DEPLOY_PATH
 
+    echo -e "${GREEN}# Make install.bash executable...${NC}"
+    chmod +x install.bash
 
     echo -e "${GREEN}## Install: remove default API credentials file...${NC}"
     rm -f apicredentials.txt
@@ -399,7 +401,7 @@ FUNC_NODE_DEPLOY(){
 
     echo
     echo -e "${GREEN}#########################################################################${NC}"
-    echo -e "${GREEN}## Install: GoPlugin V2 NVM...${NC}"
+    echo -e "${GREEN}## Install: GoPlugin v3 NVM...${NC}"
 
     echo -e "${GREEN}## Source NVM environmentals shell script...${NC}"
     source ~/.nvm/nvm.sh
@@ -408,17 +410,17 @@ FUNC_NODE_DEPLOY(){
     # Install Node Manager Package version & enable
 
     echo -e "${GREEN}## NVM install & use...${NC}"
-    nvm install 16.14.0
-    nvm use 16.14.0
+    nvm install 20.18.1
+    nvm use 20.18.1
     node --version
     
 
 
     echo
     echo -e "${GREEN}#########################################################################${NC}"
-    echo -e "${GREEN}## Install: GoPlugin V2 dependancies...${NC}"
+    echo -e "${GREEN}## Install: GoPlugin v3 dependancies...${NC}"
 
-    npm install -g pnpm 
+    npm install -g pnpm@9 
     if [ $? != 0 ]; then
       echo
       echo  -e "${RED}## ERROR :: PNPM dependancies install encoutered issues${NC}"
@@ -456,16 +458,28 @@ FUNC_NODE_DEPLOY(){
 
     echo
     echo -e "${GREEN}#########################################################################${NC}"
-    echo -e "${GREEN}## Install: Complie dependancy install files...${NC}"
+    echo -e "${GREEN}## Install: Run install.bash file to setup...${NC}"
+    # echo -e "${GREEN}## Install: Complie dependancy install files...${NC}"
      
-    make install
+    # make install
+    # if [ $? != 0 ]; then
+    #   echo
+    #   echo  -e "${RED}## ERROR :: MAKE install encoutered issues${NC}"
+    #   sleep 2s
+    #   FUNC_EXIT_ERROR
+    # else
+    #   echo -e "${GREEN}INFO :: Successfully complied dependancy install files${NC}"
+    #   sleep 2s
+    # fi
+
+    ./install.bash
     if [ $? != 0 ]; then
       echo
-      echo  -e "${RED}## ERROR :: MAKE install encoutered issues${NC}"
+      echo  -e "${RED}## ERROR :: install.bash install encountered issues${NC}"
       sleep 2s
       FUNC_EXIT_ERROR
     else
-      echo -e "${GREEN}INFO :: Successfully complied dependancy install files${NC}"
+      echo -e "${GREEN}INFO :: Successfully completed install.bash${NC}"
       sleep 2s
     fi
     
@@ -539,7 +553,7 @@ EOF
     npm install pm2 -g
 
     pm2 startup systemd
-    sudo env PATH=$PATH:/home/$USER_ID/.nvm/versions/node/v16.14.0/bin /home/$USER_ID/.nvm/versions/node/v16.14.0/lib/node_modules/pm2/bin/pm2 startup systemd -u $USER_ID --hp /home/$USER_ID
+    sudo env PATH=$PATH:/home/$USER_ID/.nvm/versions/node/v20.18.1/bin /home/$USER_ID/.nvm/versions/node/v20.18.1/lib/node_modules/pm2/bin/pm2 startup systemd -u $USER_ID --hp /home/$USER_ID
     pm2 save
 
 
