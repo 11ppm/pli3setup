@@ -302,6 +302,9 @@ FUNC_NODE_DEPLOY() {
     echo -e "${GREEN}#########################################################################${NC}"
     echo -e "${GREEN}## Install: Clone GoPlugin v3 repo...${NC}"
 
+    # Set the deployment path
+    PLI_DEPLOY_PATH="$HOME/pluginv3.0"
+
     git clone https://github.com/GoPlugin/pluginv3.0.git
 
     echo -e "${GREEN}## Install: switch to GoPlugin v3 folder...${NC}"
@@ -465,6 +468,7 @@ FUNC_NODE_DEPLOY() {
 
     while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
         ./install.bash # Invoke the second script
+        # ../pluginv3.0/install.bash # 修正
 
         if [[ $? -eq 0 ]]; then
             SUCCESS=true
