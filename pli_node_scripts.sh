@@ -498,7 +498,7 @@ FUNC_NODE_DEPLOY(){
         sleep 2s
     fi
     
-    MAX_RETRIES=3  # Maximum number of retries
+    MAX_RETRIES=10  # Maximum number of retries
     RETRY_DELAY=5  # Delay in seconds between retries
     RETRY_COUNT=0
     SUCCESS=false
